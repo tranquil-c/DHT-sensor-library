@@ -282,12 +282,12 @@ bool DHT::read(bool force) {
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
     if (expectPulse(LOW) == TIMEOUT) {
-      syslg(F("DHT timeout waiting for start signal low pulse."));
+      syslg("DHT timeout waiting for start signal low pulse.");
       _lastresult = false;
       return _lastresult;
     }
     if (expectPulse(HIGH) == TIMEOUT) {
-      syslg(F("DHT timeout waiting for start signal high pulse."));
+      syslg("DHT timeout waiting for start signal high pulse.");
       _lastresult = false;
       return _lastresult;
     }
@@ -312,7 +312,7 @@ bool DHT::read(bool force) {
     uint32_t lowCycles = cycles[2 * i];
     uint32_t highCycles = cycles[2 * i + 1];
     if ((lowCycles == TIMEOUT) || (highCycles == TIMEOUT)) {
-      syslg(F("DHT timeout waiting for pulse."));
+      syslg("DHT timeout waiting for pulse.");
       _lastresult = false;
       return _lastresult;
     }
@@ -334,7 +334,7 @@ bool DHT::read(bool force) {
     _lastresult = true;
     return _lastresult;
   } else {
-    syslg(F("DHT checksum failure!"));
+    syslg("DHT checksum failure!");
     _lastresult = false;
     return _lastresult;
   }
