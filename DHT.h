@@ -19,6 +19,7 @@
 #define DHT_H
 
 #include "Arduino.h"
+#include "sa_common.h"
 
 /* Uncomment to enable printing out nice debug messages. */
 //#define DHT_DEBUG
