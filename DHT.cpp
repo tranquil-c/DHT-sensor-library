@@ -264,7 +264,8 @@ bool DHT::read(bool force) {
     delay(20); // data sheet says at least 18ms, 20ms just to be safe
     break;
   }
-
+  bool timeout_low = false;
+  bool timeout_high = false;
   uint32_t cycles[80];
   {
     // End the start signal by setting data line high for 40 microseconds.
@@ -282,12 +283,12 @@ bool DHT::read(bool force) {
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
     if (expectPulse(LOW) == TIMEOUT) {
-      syslg("DHT timeout waiting for start signal low pulse.");
+      timeout_low = true;
       _lastresult = false;
       return _lastresult;
     }
     if (expectPulse(HIGH) == TIMEOUT) {
-      syslg("DHT timeout waiting for start signal high pulse.");
+      timeout_high = true;
       _lastresult = false;
       return _lastresult;
     }
@@ -305,6 +306,11 @@ bool DHT::read(bool force) {
       cycles[i + 1] = expectPulse(HIGH);
     }
   } // Timing critical code is now complete.
+
+  if (timeout_low)
+    syslg("DHT timeout waiting for start signal low pulse.");
+  if (timeout_high)
+    syslg("DHT timeout waiting for start signal high pulse.");
 
   // Inspect pulses and determine which ones are 0 (high state cycle count < low
   // state cycle count), or 1 (high state cycle count > low state cycle count).
